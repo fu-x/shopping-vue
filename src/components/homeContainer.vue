@@ -1,10 +1,9 @@
 <template>
   <div>
-    <mt-swipe :auto="4000">
-      <mt-swipe-item v-for="item in swipe" :key="item.id">
-        <img :src="item.img" />
-      </mt-swipe-item>
-    </mt-swipe>
+    <!-- 轮播图区域 -->
+    <swiper :swipe="swiper" :isfull="isfull"></swiper>
+
+    <!-- 菜单区域 -->
     <ul class="mui-table-view mui-grid-view mui-grid-9">
       <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
         <router-link to="/home/newslist">
@@ -19,10 +18,10 @@
         </router-link>
       </li>
       <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-        <a href="#">
+        <router-link to="/home/goodslist">
           <span class="mui-icon mui-icon-chatbubble"></span>
           <div class="mui-media-body">商品购买</div>
-        </a>
+        </router-link>
       </li>
       <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
         <a href="#">
@@ -47,17 +46,19 @@
 </template>
 
 <script>
+import swiper from './swipe.vue'
 export default {
   data() {
     return {
-      swipe: ""
+      swiper: [],
+      isfull:true
     };
   },
   methods: {
     getSwipe() {
       this.$http.get("api/getlunbo").then(result => {
           if (result.body.status === 0) {
-            this.swipe = result.body.message;
+            this.swiper = result.body.message;
           } else {
             Toast("获取轮播图失败。");
           }
@@ -66,18 +67,14 @@ export default {
   },
   created() {
     this.getSwipe();
+  },
+  components:{
+    swiper
   }
 };
 </script>
 
 <style scoped>
-.mint-swipe {
-  height: 200px;
-}
-img {
-  width: 100%;
-  height: 100%;
-}
 .mui-grid-view.mui-grid-9{
   background-color: #fff;
   border: none;
